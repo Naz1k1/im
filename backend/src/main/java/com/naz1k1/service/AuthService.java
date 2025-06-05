@@ -28,6 +28,10 @@ public class AuthService {
         this.redisTemplate = redisTemplate;
     }
 
+    /**
+     * 注册方法
+     * @param dto
+     */
     public void register(RegisterDTO dto) {
         if (usermapper.findByUsername(dto.getUsername()) > 0) {
             throw new BusinessException("用户名已存在");
@@ -39,6 +43,7 @@ public class AuthService {
         BeanUtils.copyProperties(dto, user,"password");
         user.setPassword(encodedPassword);
         user.setSalt(salt);
+        user.setAvatar("default-avatar.svg");
         usermapper.insert(user);
     }
 
