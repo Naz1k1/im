@@ -1,6 +1,6 @@
 <script setup>
   import {ref} from "vue";
-  import {authApi} from "../api/authApi.js";
+  import {authAPI} from "../api/AuthAPI.js";
   import router from "../router/index.js";
   import {ElMessage} from "element-plus";
 
@@ -21,13 +21,18 @@
     try {
       await loginForm.value.validate()
       loading.value = true
-      await authApi.login(form.value.username,form.value.password)
-
+      const { data } = await authAPI.login(form.value)
+      localStorage.setItem('token', data.data)
       await router.push({ path:'/' })
       ElMessage.success('登录成功')
-    }catch (e) {
-
+    } catch (e) {
+      loading.value = false
+      ElMessage.error('登录失败')
     }
+  }
+
+  const goToRegister = () => {
+    router.push('/register')
   }
 
 </script>
@@ -60,6 +65,9 @@
             @click = 'loginHandle'
             :loading="loading"
         >登录</el-button>
+        <div class="register-link">
+          还没有账号？<a href="#" @click.prevent="goToRegister">立即注册</a>
+        </div>
       </el-form>
     </el-card>
   </div>
@@ -90,5 +98,20 @@
 .login-btn {
   width: 100%;
   margin-top: 10px;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #409EFF;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
 }
 </style>
