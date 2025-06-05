@@ -27,4 +27,12 @@
             username = #{username}
     </select>
 
+    <!-- 根据ID查询用户 -->
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM im_user
+        WHERE id = #{id}
+    </select>
+
 </mapper>

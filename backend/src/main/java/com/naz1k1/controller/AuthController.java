@@ -4,10 +4,12 @@ import com.naz1k1.model.request.LoginDTO;
 import com.naz1k1.model.request.RegisterDTO;
 import com.naz1k1.model.response.Result;
 import com.naz1k1.service.AuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -20,16 +22,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public Result<?> register(@Valid @RequestBody RegisterDTO dto) {
-        if (authService.register(dto)){
-            return Result.success();
-        }
-        return Result.failed();
+        authService.register(dto);
+        return Result.success();
     }
 
-
     @PostMapping("/login")
-    public Result<String> login(@RequestBody LoginDTO dto) {
-        return Result.success(authService.login(dto));
+    public Result<String> login(@Valid @RequestBody LoginDTO dto) {
+        String token = authService.login(dto);
+        return Result.success(token);
     }
 
     @PostMapping("/logout")

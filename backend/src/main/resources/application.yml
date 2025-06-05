@@ -59,3 +59,9 @@ mybatis-plus:
     db-config:
       id-type: auto # 主键自增
     banner: off
+
+# 日志配置
+logging:
+  level:
+    com.naz1k1: info
+    org.springframework: warn

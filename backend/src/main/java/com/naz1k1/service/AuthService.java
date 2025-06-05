@@ -2,6 +2,7 @@ package com.naz1k1.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.naz1k1.entity.User;
+import com.naz1k1.exception.BusinessException;
 import com.naz1k1.mapper.UserMapper;
 import com.naz1k1.model.request.LoginDTO;
 import com.naz1k1.model.request.RegisterDTO;
@@ -27,9 +28,9 @@ public class AuthService {
         this.redisTemplate = redisTemplate;
     }
 
-    public boolean register(RegisterDTO dto) {
+    public void register(RegisterDTO dto) {
         if (usermapper.findByUsername(dto.getUsername()) > 0) {
-            return false;
+            throw new BusinessException("用户名已存在");
         }
         String salt = passwordEncoder.generateSalt();
         String encodedPassword = passwordEncoder.encode(dto.getPassword(), salt);
@@ -38,7 +39,7 @@ public class AuthService {
         BeanUtils.copyProperties(dto, user,"password");
         user.setPassword(encodedPassword);
         user.setSalt(salt);
-        return usermapper.insert(user) > 0;
+        usermapper.insert(user);
     }
 
     public String login(LoginDTO dto) {

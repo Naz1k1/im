@@ -27,6 +27,7 @@ public class JwtTokenProvider {
      * 生成Token
      */
     public String generateToken(Long userId) {
+
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expiration);
 
@@ -52,6 +53,21 @@ public class JwtTokenProvider {
             return Long.parseLong(jwt.getSubject());
         }catch (JWTVerificationException exception){
             return null;
+        }
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            DecodedJWT jwt = JWT.require(Algorithm.HMAC512(secret))
+                    .build()
+                    .verify(token);
+
+            long userId = Long.parseLong(jwt.getSubject());
+
+            String storedToken = (String) redisTemplate.opsForValue().get("token:"+userId);
+            return token.equals(storedToken);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
