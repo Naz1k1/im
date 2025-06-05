@@ -14,6 +14,6 @@ public class FriendRelation {
     private Long friendId;
     private String remark;
     private int status;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

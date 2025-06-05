@@ -73,7 +73,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.15</version> <!-- 或使用与Spring Boot兼容的版本 -->
+            <version>1.15</version>
         </dependency>
     </dependencies>
 
