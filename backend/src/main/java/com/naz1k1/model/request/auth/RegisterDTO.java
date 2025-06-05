@@ -1,4 +1,4 @@
-package com.naz1k1.model.request;
+package com.naz1k1.model.request.auth;
 
 import lombok.Data;
 

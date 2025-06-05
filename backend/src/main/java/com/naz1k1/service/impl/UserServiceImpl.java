@@ -1,9 +1,11 @@
 package com.naz1k1.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.naz1k1.entity.User;
 import com.naz1k1.mapper.UserMapper;
-import com.naz1k1.model.request.UpdateUserInfoDTO;
+import com.naz1k1.model.request.user.UpdateUserInfoDTO;
+import com.naz1k1.model.response.FriendVO;
 import com.naz1k1.model.response.UserInfoVO;
 import com.naz1k1.service.UserService;
 import com.naz1k1.utils.PasswordEncoder;

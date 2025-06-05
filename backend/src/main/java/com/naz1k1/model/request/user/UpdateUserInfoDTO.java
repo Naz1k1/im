@@ -1,4 +1,4 @@
-package com.naz1k1.model.request;
+package com.naz1k1.model.request.user;
 
 import lombok.Data;
 
