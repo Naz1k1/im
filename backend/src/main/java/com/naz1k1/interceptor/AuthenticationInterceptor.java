@@ -30,6 +30,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
         // 获取请求头中的token
         String token = extractToken(request);
         if (StringUtils.isBlank(token)) {
@@ -66,9 +69,17 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private String extractToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(BEARER_PREFIX.length());
+        // 检查请求头是否为空
+        if (bearerToken == null) {
+            log.warn("Authorization 请求头为 null");
+            return null;
         }
-        return null;
+        // 检查 Bearer 前缀
+        if (!bearerToken.startsWith(BEARER_PREFIX)) {
+            return null;
+        }
+        // 提取实际的 token
+        String token = bearerToken.substring(BEARER_PREFIX.length());
+        return token;
     }
 }

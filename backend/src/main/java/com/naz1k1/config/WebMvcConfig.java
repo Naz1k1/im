@@ -7,31 +7,31 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
+
     private final AuthenticationInterceptor authenticationInterceptor;
 
-    public WebConfig(AuthenticationInterceptor authenticationInterceptor) {
+    public WebMvcConfig(AuthenticationInterceptor authenticationInterceptor) {
         this.authenticationInterceptor = authenticationInterceptor;
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173")  // 前端地址
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .exposedHeaders("*")
+                .allowCredentials(true);
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(
                         "/api/auth/login",
-                        "/api/auth/register",
-                        "/api/auth/logout"
-//                        "/api/auth/refresh-token"
+                        "/api/auth/register"
                 );
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
     }
 }

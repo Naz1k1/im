@@ -47,24 +47,27 @@ public class JwtTokenProvider {
      */
     public Long getUserIdFormToken(String token) {
         try {
-            DecodedJWT jwt = JWT.require(Algorithm.HMAC512(secret))
-                    .build()
-                    .verify(token);
+            DecodedJWT jwt = verifyToken(token);
             return Long.parseLong(jwt.getSubject());
-        }catch (JWTVerificationException exception){
+        } catch (JWTVerificationException exception) {
             return null;
         }
     }
 
+    private DecodedJWT verifyToken(String token) {
+        return JWT.require(Algorithm.HMAC512(secret))
+                .build()
+                .verify(token);
+    }
+
     public boolean validateToken(String token) {
         try {
-            DecodedJWT jwt = JWT.require(Algorithm.HMAC512(secret))
-                    .build()
-                    .verify(token);
+            Long userId = getUserIdFormToken(token);
+            if (userId == null) {
+                return false;
+            }
 
-            long userId = Long.parseLong(jwt.getSubject());
-
-            String storedToken = (String) redisTemplate.opsForValue().get("token:"+userId);
+            String storedToken = (String) redisTemplate.opsForValue().get("token:" + userId);
             return token.equals(storedToken);
         } catch (Exception e) {
             throw new RuntimeException(e);

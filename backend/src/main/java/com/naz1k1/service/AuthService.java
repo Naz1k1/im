@@ -55,8 +55,8 @@ public class AuthService {
         return jwtTokenProvider.generateToken(user.getId());
     }
 
-    public void logout(String token) {
-        Long userId = jwtTokenProvider.getUserIdFormToken(token);
+    public void logout(Long userId) {
         redisTemplate.delete("token:" +userId);
     }
+
 }

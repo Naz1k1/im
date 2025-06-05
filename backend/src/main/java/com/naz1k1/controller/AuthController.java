@@ -33,8 +33,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Result<Void> logout(@RequestHeader("Authorization") String token) {
-        authService.logout(token);
+    public Result<Void> logout(@RequestAttribute Long userId) {
+        authService.logout(userId);
         return Result.success();
     }
 }
