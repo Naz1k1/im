@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { Plus, Search, UserFilled, CirclePlus } from "@element-plus/icons-vue";
 
 const props = defineProps({
   chatList: {
@@ -14,25 +15,53 @@ const props = defineProps({
 
 const emit = defineEmits(['select-chat', 'add-friend', 'create-group'])
 const searchQuery = ref('')
+
+const handleMenuClick = (type) => {
+  if (type === 'friend') {
+    emit('add-friend')
+  } else {
+    emit('create-group')
+  }
+}
 </script>
 
 <template>
   <div class="chat-list">
-    <!-- 搜索框 -->
+    <!-- 搜索框和添加按钮 -->
     <div class="search-box">
-      <el-input
-        v-model="searchQuery"
-        placeholder="搜索"
-        prefix-icon="el-icon-search"
-        clearable
-      />
-    </div>
-
-    <!-- 操作按钮 -->
-    <div class="action-buttons">
-      <el-button type="text">
-        <i class="el-icon-refresh"></i> 刷新
-      </el-button>
+      <div class="search-input">
+        <el-input
+            v-model="searchQuery"
+            placeholder="搜索"
+            clearable
+            :prefix-icon="Search"
+        >
+        </el-input>
+      </div>
+      <div class="add-button">
+        <el-dropdown trigger="click">
+          <el-button type="text">
+            <el-icon><Plus /></el-icon>
+          </el-button>
+          
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleMenuClick('friend')">
+                <div class="dropdown-item">
+                  <el-icon><UserFilled /></el-icon>
+                  添加好友
+                </div>
+              </el-dropdown-item>
+              <el-dropdown-item @click="handleMenuClick('group')">
+                <div class="dropdown-item">
+                  <el-icon><CirclePlus /></el-icon>
+                  创建群聊
+                </div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
 
     <!-- 聊天列表 -->
@@ -70,13 +99,43 @@ const searchQuery = ref('')
 .search-box {
   padding: 10px;
   border-bottom: 1px solid #e6e6e6;
+  display: flex;
+  align-items: center;
 }
 
-.action-buttons {
-  padding: 10px;
+.search-input {
+  flex: 1;
+  margin-right: 8px;
+}
+
+.add-button {
   display: flex;
-  justify-content: space-around;
-  border-bottom: 1px solid #e6e6e6;
+  align-items: center;
+}
+
+.add-button .el-button {
+  padding: 8px;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+:deep(.el-dropdown-menu__item:hover) {
+  background-color: #07c160 !important;
+  color: white !important;
+}
+
+:deep(.el-dropdown-menu__item:hover .el-icon) {
+  color: white !important;
 }
 
 .chat-items {

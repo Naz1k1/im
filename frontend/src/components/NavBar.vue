@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import chatIcon from '../assets/chat.svg'
-import contactIcon from '../assets/contact.svg'
-import moreIcon from  '../assets/more.svg'
+import chatIcon from '../assets/image/chat.svg'
+import contactIcon from '../assets/image/contact.svg'
+import moreIcon from '../assets/image/more.svg'
 
 const props = defineProps({
   userInfo: {
@@ -24,34 +24,40 @@ const handleNavClick = (nav) => {
   <div class="nav-bar">
     <!-- 用户头像 -->
     <div class="nav-header">
-      <el-avatar 
-        :size="40" 
-        :src="userInfo.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-        @click="emit('logout')"
+      <el-avatar
+          :size="40"
+          :src="userInfo.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+          @click="emit('logout')"
       />
     </div>
     <!-- 导航菜单 -->
     <div class="nav-menu">
-      <div 
-        class="nav-item" 
-        :class="{ active: activeNav === 'chat' }"
-        @click="handleNavClick('chat')"
-      >
-        <img :src="chatIcon" class="nav-icon" alt="chat"/>
+      <!-- 主要导航项 -->
+      <div class="nav-main">
+        <div
+            class="nav-item"
+            :class="{ active: activeNav === 'chat' }"
+            @click="handleNavClick('chat')"
+        >
+          <img :src="chatIcon" class="nav-icon" alt="chat"/>
+        </div>
+        <div
+            class="nav-item"
+            :class="{ active: activeNav === 'contacts' }"
+            @click="handleNavClick('contacts')"
+        >
+          <img :src="contactIcon" class="nav-icon" alt="contacts"/>
+        </div>
       </div>
-      <div 
-        class="nav-item" 
-        :class="{ active: activeNav === 'contacts' }"
-        @click="handleNavClick('contacts')"
-      >
-        <img :src="contactIcon" class="nav-icon" alt="chat"/>
-      </div>
-      <div 
-        class="nav-item" 
-        :class="{ active: activeNav === 'more' }"
-        @click="handleNavClick('more')"
-      >
-        <img :src="moreIcon" class="nav-icon" alt="chat"/>
+      <!-- 底部导航项 -->
+      <div class="nav-bottom">
+        <div
+            class="nav-item"
+            :class="{ active: activeNav === 'more' }"
+            @click="handleNavClick('more')"
+        >
+          <img :src="moreIcon" class="nav-icon" alt="more"/>
+        </div>
       </div>
     </div>
   </div>
@@ -65,6 +71,7 @@ const handleNavClick = (nav) => {
   flex-direction: column;
   align-items: center;
   padding: 20px 0;
+  height: 100%; /* 确保导航栏占满高度 */
 }
 
 .nav-header {
@@ -76,6 +83,22 @@ const handleNavClick = (nav) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1; /* 让导航菜单占据剩余空间 */
+  width: 100%; /* 确保宽度占满 */
+}
+
+.nav-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.nav-bottom {
+  margin-top: auto; /* 将底部导航推到底部 */
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px; /* 底部间距 */
 }
 
 .nav-item {
