@@ -8,6 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("com.naz1k1.mapper")
 public class BackendApplication {
     public static void main(String[] args) {
-        SpringApplication.run(BackendApplication.class, args);
+       try {
+           SpringApplication.run(BackendApplication.class,args);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
     }
 }

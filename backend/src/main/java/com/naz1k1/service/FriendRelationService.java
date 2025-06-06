@@ -18,4 +18,6 @@ public interface FriendRelationService extends IService<FriendRelation> {
     boolean updateRemark(Long userId, Long friendId, String remark);
 
     List<FriendVO> getFriendList(Long userId);
+
+    List<FriendVO> getOnlineFriends(Long userId);
 }

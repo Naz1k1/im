@@ -16,13 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
     private final UserMapper userMapper;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
-    public AuthenticationInterceptor(UserMapper userMapper, RedisTemplate redisTemplate, JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationInterceptor(UserMapper userMapper, RedisTemplate<Object, Object> redisTemplate, JwtTokenProvider jwtTokenProvider) {
         this.userMapper = userMapper;
         this.redisTemplate = redisTemplate;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -68,18 +68,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     }
 
     private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        // 检查请求头是否为空
-        if (bearerToken == null) {
-            log.warn("Authorization 请求头为 null");
-            return null;
+        String header = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.isNotBlank(header) && header.startsWith(BEARER_PREFIX)) {
+            return header.substring(BEARER_PREFIX.length());
         }
-        // 检查 Bearer 前缀
-        if (!bearerToken.startsWith(BEARER_PREFIX)) {
-            return null;
-        }
-        // 提取实际的 token
-        String token = bearerToken.substring(BEARER_PREFIX.length());
-        return token;
+        return null;
     }
 }

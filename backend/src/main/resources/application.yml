@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/im?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
     username: root
-    password: 12345678
+    password: 123456
     hikari:
       # 连接池基本配置
       pool-name: IM-HikariPool
@@ -46,10 +46,14 @@ spring:
   redis:
     host: localhost
     port: 6379
-    password:
     database: 0
-
-
+    timeout: 10000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
 
 mybatis-plus:
   configuration:
