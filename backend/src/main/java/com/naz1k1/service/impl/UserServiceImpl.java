@@ -21,6 +21,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 获得个人信息
+     * @param userId
+     * @return
+     */
     @Override
     public UserInfoVO getUserInfo(Long userId) {
         User user = getById(userId);
@@ -29,6 +34,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return userInfoVO;
     }
 
+    /**
+     * 更新个人信息
+     * @param dto
+     * @param userId
+     */
     @Override
     public void updateUserInfo(UpdateUserInfoDTO dto, Long userId) {
         User user = getById(userId);
@@ -36,6 +46,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateById(user);
     }
 
+    /**
+     * 更新密码
+     * @param password
+     * @param userId
+     */
     @Override
     public void updatePassword(String password, Long userId) {
         User user = getById(userId);
@@ -44,9 +59,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateById(user);
     }
 
+    /**
+     * 更新头像
+     * @param avatar
+     * @param userId
+     */
     public void updateAvatar(String avatar, Long userId) {
         User user = getById(userId);
         user.setAvatar(avatar);
         updateById(user);
     }
+
+
 }
