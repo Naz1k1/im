@@ -7,6 +7,7 @@ import router from '../router'
 import NavBar from '../components/NavBar.vue'
 import ChatList from '../components/ChatList.vue'
 import ChatWindow from '../components/ChatWindow.vue'
+import { Search, Male, MoreFilled, Message, Phone, VideoCamera } from '@element-plus/icons-vue'
 
 const userInfo = ref({
   username: '',
@@ -30,6 +31,9 @@ const groupForm = ref({
   name: '',
   description: ''
 })
+const searchResult = ref(null)
+const addFriendRemark = ref('')
+const hasSearched = ref(false)
 
 // 计算初始弹窗位置（屏幕中心）
 const initDialogPosition = () => {
@@ -103,10 +107,17 @@ const selectChat = (chat) => {
 // 添加好友
 const handleAddFriend = async () => {
   try {
-    await UserAPI.addFriend(friendUsername.value)
+    if (!searchResult.value || !searchResult.value.userId) {
+      ElMessage.error('用户信息不完整')
+      return
+    }
+    await UserAPI.addFriend(searchResult.value.userId, addFriendRemark.value)
     ElMessage.success('好友请求已发送')
     addFriendDialogVisible.value = false
     friendUsername.value = ''
+    addFriendRemark.value = ''
+    searchResult.value = null
+    hasSearched.value = false
   } catch (error) {
     ElMessage.error('添加好友失败')
   }
@@ -132,6 +143,24 @@ const showDialog = (type) => {
     addFriendDialogVisible.value = true
   } else {
     createGroupDialogVisible.value = true
+  }
+}
+
+// 搜索用户
+const searchUser = async () => {
+  try {
+    const response = await UserAPI.searchUser(friendUsername.value)
+    if (response.data.code === 200 && response.data.data) {
+      searchResult.value = response.data.data
+      hasSearched.value = false
+    } else {
+      searchResult.value = null
+      hasSearched.value = true
+    }
+  } catch (error) {
+    ElMessage.error('搜索用户失败')
+    searchResult.value = null
+    hasSearched.value = true
   }
 }
 
@@ -168,8 +197,9 @@ getChatList()
     <!-- 添加好友弹窗 -->
     <el-dialog
       v-model="addFriendDialogVisible"
-      title="添加好友"
-      width="400px"
+      title="添加朋友"
+      width="380px"
+      height="200px"
       :modal="false"
       :close-on-click-modal="false"
       draggable
@@ -181,11 +211,86 @@ getChatList()
       }"
     >
       <div class="dialog-content">
-        <el-input v-model="friendUsername" placeholder="请输入好友账号" />
-        <div class="dialog-footer">
-          <el-button @click="addFriendDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleAddFriend">添加</el-button>
+        <div class="search-box">
+          <el-input 
+            v-model="friendUsername" 
+            placeholder="微信号/手机号" 
+            class="search-input"
+            clearable
+          >
+            <template #append>
+              <el-button type="success" class="search-btn" @click="searchUser">搜索</el-button>
+            </template>
+          </el-input>
         </div>
+
+        <!-- 搜索结果区域 -->
+        <template v-if="searchResult">
+          <div class="user-basic-info">
+            <el-avatar 
+              :size="45" 
+              :src="searchResult.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+              class="user-avatar"
+            />
+            <div class="user-info">
+              <div class="nickname">
+                {{ searchResult.nickname }}
+                <el-icon class="gender-icon"><Male /></el-icon>
+              </div>
+              <div class="wx-id">微信号：{{ searchResult.username }}</div>
+            </div>
+            <el-dropdown trigger="click" class="more-actions" v-if="searchResult.status !== 'NOT_FRIEND'">
+              <el-button text><el-icon><MoreFilled /></el-icon></el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>设置备注和标签</el-dropdown-item>
+                  <el-dropdown-item>设置朋友权限</el-dropdown-item>
+                  <el-dropdown-item>把他推荐给朋友</el-dropdown-item>
+                  <el-dropdown-item>设为星标朋友</el-dropdown-item>
+                  <el-dropdown-item>加入黑名单</el-dropdown-item>
+                  <el-dropdown-item class="danger">删除联系人</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+
+          <div class="user-detail">
+            <div class="detail-item">
+              <div class="label">备注</div>
+              <div class="value">
+                <el-input 
+                  v-model="addFriendRemark" 
+                  placeholder="添加备注名" 
+                  class="remark-input"
+                />
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="label">朋友圈</div>
+              <div class="value"></div>
+            </div>
+            <div class="detail-item">
+              <div class="label">个性签名</div>
+              <div class="value signature">{{ searchResult.signature || '暂无签名' }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="label">来源</div>
+              <div class="value source">通过搜索微信号添加</div>
+            </div>
+          </div>
+
+          <!-- 添加好友按钮 -->
+          <div class="add-friend-action" v-if="searchResult.status === 'NOT_FRIEND'">
+            <el-button type="primary" @click="handleAddFriend" class="add-btn">添加到通讯录</el-button>
+          </div>
+        </template>
+
+        <!-- 无搜索结果提示 -->
+        <template v-else-if="hasSearched">
+          <div class="no-result">
+            <el-empty description="该用户不存在" />
+          </div>
+        </template>
       </div>
     </el-dialog>
 
@@ -256,7 +361,171 @@ getChatList()
   top: 16px;
 }
 
+.search-box {
+  padding: 8px;
+  background-color: #f5f5f5;
+}
+
+.search-input {
+  :deep(.el-input__wrapper) {
+    background-color: #fff;
+    border-radius: 4px;
+    height: 32px;
+  }
+  
+  :deep(.el-input-group__append) {
+    padding: 0;
+  }
+}
+
+.search-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 0 4px 4px 0;
+  height: 32px;
+}
+
+.search-result {
+  padding: 0;
+}
+
+.user-basic-info {
+  padding: 12px;
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+
+.user-avatar {
+  margin-right: 10px;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.nickname {
+  font-size: 15px;
+  font-weight: 400;
+  color: #000;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.gender-icon {
+  color: #10aeff;
+  margin-left: 4px;
+}
+
+.wx-id {
+  font-size: 13px;
+  color: #888;
+}
+
+.more-actions {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.user-detail {
+  padding: 0 15px;
+}
+
+.detail-item {
+  display: flex;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-item .label {
+  width: 70px;
+  color: #888;
+  font-size: 13px;
+}
+
+.detail-item .value {
+  flex: 1;
+  font-size: 13px;
+}
+
+.remark-input {
+  :deep(.el-input__wrapper) {
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
+.signature, .source {
+  color: #353535;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px;
+  border-top: 1px solid #eee;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #353535;
+  font-size: 12px;
+  
+  .el-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+}
+
+:deep(.el-dropdown-menu__item.danger) {
+  color: #ff4d4f;
+}
+
+:deep(.el-dialog) {
+  border-radius: 4px;
+  overflow: hidden;
+  height: auto;
+  max-height: 500px;
+}
+
+:deep(.el-dialog__header) {
+  margin: 0;
+  padding: 10px 12px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+:deep(.el-dialog__title) {
+  font-size: 15px;
+  font-weight: normal;
+}
+
 :deep(.el-dialog__body) {
-  padding: 0 20px;
+  padding: 0;
+}
+
+:deep(.el-dialog__headerbtn) {
+  top: 12px;
+  right: 12px;
+}
+
+.add-friend-action {
+  padding: 16px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+.add-btn {
+  width: 200px;
+}
+
+.no-result {
+  padding: 40px 0;
+  text-align: center;
 }
 </style> 
