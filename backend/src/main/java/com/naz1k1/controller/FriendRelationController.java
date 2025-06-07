@@ -31,7 +31,7 @@ public class FriendRelationController {
         return Result.success(onlineFriends);
     }
 
-    @PostMapping("/search-user")
+    @GetMapping("/search-user")
     public Result<UserSearchVO> searchUser(
             @RequestParam String username,
             @RequestAttribute Long userId) {

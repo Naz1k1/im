@@ -62,6 +62,7 @@ public class FriendRelationServiceImpl extends ServiceImpl<FriendRelationMapper,
 
         UserSearchVO vo = new UserSearchVO();
         BeanUtils.copyProperties(user, vo);
+        vo.setUserId(user.getId());
 
         if (relation == null) {
             vo.setStatus(FriendStatus.NOT_FRIEND);

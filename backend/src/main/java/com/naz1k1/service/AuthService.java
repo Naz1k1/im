@@ -30,7 +30,7 @@ public class AuthService {
 
     /**
      * 注册方法
-     * @param dto
+     * @param dto 用户注册数据传输对象，包含用户名、密码、昵称。
      */
     public void register(RegisterDTO dto) {
         if (usermapper.findByUsername(dto.getUsername()) > 0) {

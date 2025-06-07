@@ -14,7 +14,7 @@ public enum ResultCode {
     FORBIDDEN(403, "无权限访问"),
     NOT_FOUND(404, "资源不存在"),
 
-    /* 业务错误码（可扩展） */
+    /* 业务错误码 */
     USER_NOT_EXIST(1001, "用户不存在"),
     USER_PASSWORD_ERROR(1002, "密码错误"),
     TOKEN_INVALID(1003, "Token无效或过期");

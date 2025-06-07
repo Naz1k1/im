@@ -20,6 +20,11 @@ public class AuthController {
         this.authService = authService;
     }
 
+    /**
+     * 注册方法
+     * @param dto 用户注册数据传输对象，包含用户名、密码、昵称。
+     * @return 成功返回200，异常全局处理器返回400
+     */
     @PostMapping("/register")
     public Result<?> register(@Valid @RequestBody RegisterDTO dto) {
         authService.register(dto);
