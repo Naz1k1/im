@@ -17,11 +17,11 @@ public class AuthService {
     private final UserMapper usermapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public AuthService(UserMapper usermapper,
                        PasswordEncoder passwordEncoder,
-                       JwtTokenProvider jwtTokenProvider, RedisTemplate<Object, Object> redisTemplate) {
+                       JwtTokenProvider jwtTokenProvider, RedisTemplate<String, Object> redisTemplate) {
         this.usermapper = usermapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;

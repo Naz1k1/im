@@ -4,7 +4,7 @@ import com.naz1k1.model.response.MessageContent;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class PrivateMessage {
@@ -13,6 +13,6 @@ public class PrivateMessage {
     private Long receiverId;
     private MessageContent content;
     private Integer status;  // 0-未读，1-已读，2-撤回
-    private LocalDateTime sendTime;
-    private LocalDateTime readTime;
+    private Date sendTime;
+    private Date readTime;
 }
