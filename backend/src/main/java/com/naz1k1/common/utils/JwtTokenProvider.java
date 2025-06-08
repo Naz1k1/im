@@ -1,4 +1,4 @@
-package com.naz1k1.utils;
+package com.naz1k1.common.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -42,11 +42,9 @@ public class JwtTokenProvider {
                 .withIssuedAt(now)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC512(secret));
-
         // 存储token
         String tokenKey = TOKEN_KEY_PREFIX + userId;
         redisTemplate.opsForValue().set(tokenKey, token, expiration, TimeUnit.MILLISECONDS);
-
         return token;
     }
 
@@ -111,7 +109,6 @@ public class JwtTokenProvider {
             if (userId == null) {
                 return false;
             }
-
             String tokenKey = TOKEN_KEY_PREFIX + userId;
             Object storedToken = redisTemplate.opsForValue().get(tokenKey);
             return token.equals(storedToken);

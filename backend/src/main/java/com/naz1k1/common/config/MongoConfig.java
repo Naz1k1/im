@@ -1,4 +1,4 @@
-package com.naz1k1.config;
+package com.naz1k1.common.config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

@@ -1,4 +1,4 @@
-package com.naz1k1.utils;
+package com.naz1k1.common.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;

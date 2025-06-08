@@ -7,7 +7,7 @@ import com.naz1k1.model.request.user.UpdatePasswordRequestDTO;
 import com.naz1k1.model.request.user.UpdateUserInfoRequestDTO;
 import com.naz1k1.model.response.UserInfoVO;
 import com.naz1k1.service.UserService;
-import com.naz1k1.utils.PasswordEncoder;
+import com.naz1k1.common.utils.PasswordEncoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

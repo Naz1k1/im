@@ -1,4 +1,4 @@
-package com.naz1k1.exception;
+package com.naz1k1.common.exception;
 
 import lombok.Getter;
 

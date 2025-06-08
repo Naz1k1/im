@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.naz1k1.entity.FriendRelation;
 import com.naz1k1.entity.User;
-import com.naz1k1.exception.BusinessException;
+import com.naz1k1.common.exception.BusinessException;
 import com.naz1k1.mapper.FriendRelationMapper;
 import com.naz1k1.mapper.UserMapper;
 import com.naz1k1.model.enums.FriendStatus;
@@ -16,11 +16,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

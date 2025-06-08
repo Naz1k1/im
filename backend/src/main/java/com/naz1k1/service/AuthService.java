@@ -2,12 +2,12 @@ package com.naz1k1.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.naz1k1.entity.User;
-import com.naz1k1.exception.BusinessException;
+import com.naz1k1.common.exception.BusinessException;
 import com.naz1k1.mapper.UserMapper;
 import com.naz1k1.model.request.auth.LoginDTO;
 import com.naz1k1.model.request.auth.RegisterDTO;
-import com.naz1k1.utils.JwtTokenProvider;
-import com.naz1k1.utils.PasswordEncoder;
+import com.naz1k1.common.utils.JwtTokenProvider;
+import com.naz1k1.common.utils.PasswordEncoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

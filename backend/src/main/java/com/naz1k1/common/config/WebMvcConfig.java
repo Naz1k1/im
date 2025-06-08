@@ -1,6 +1,6 @@
-package com.naz1k1.config;
+package com.naz1k1.common.config;
 
-import com.naz1k1.interceptor.AuthenticationInterceptor;
+import com.naz1k1.common.interceptor.AuthenticationInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

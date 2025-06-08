@@ -1,8 +1,8 @@
-package com.naz1k1.interceptor;
+package com.naz1k1.common.interceptor;
 
 import com.naz1k1.entity.User;
 import com.naz1k1.mapper.UserMapper;
-import com.naz1k1.utils.JwtTokenProvider;
+import com.naz1k1.common.utils.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
