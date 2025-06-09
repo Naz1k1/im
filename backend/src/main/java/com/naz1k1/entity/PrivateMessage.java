@@ -1,6 +1,6 @@
 package com.naz1k1.entity;
 
-import com.naz1k1.model.response.MessageContent;
+import com.naz1k1.model.message.MessageContent;
 import lombok.Data;
 import org.bson.types.ObjectId;
 

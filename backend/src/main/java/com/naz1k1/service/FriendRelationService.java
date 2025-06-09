@@ -20,4 +20,6 @@ public interface FriendRelationService extends IService<FriendRelation> {
     List<FriendVO> getFriendList(Long userId);
 
     List<FriendVO> getOnlineFriends(Long userId);
+
+    List<?> getPendingRelation(Long userId);
 }

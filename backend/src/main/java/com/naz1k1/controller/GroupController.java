@@ -5,7 +5,7 @@ import com.naz1k1.entity.GroupMember;
 import com.naz1k1.model.request.CreateGroupRequest;
 import com.naz1k1.model.request.UpdateGroupRequest;
 import com.naz1k1.model.response.GroupVO;
-import com.naz1k1.model.response.Result;
+import com.naz1k1.model.Result;
 import com.naz1k1.service.GroupService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

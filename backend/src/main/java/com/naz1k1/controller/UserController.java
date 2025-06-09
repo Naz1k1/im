@@ -2,7 +2,7 @@ package com.naz1k1.controller;
 
 import com.naz1k1.model.request.user.UpdatePasswordRequestDTO;
 import com.naz1k1.model.request.user.UpdateUserInfoRequestDTO;
-import com.naz1k1.model.response.Result;
+import com.naz1k1.model.Result;
 import com.naz1k1.model.response.UserInfoVO;
 import com.naz1k1.service.UserService;
 import org.springframework.validation.annotation.Validated;

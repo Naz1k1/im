@@ -200,4 +200,15 @@ public class FriendRelationServiceImpl extends ServiceImpl<FriendRelationMapper,
                 .filter(FriendVO::getOnline)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<?> getPendingRelation(Long userId) {
+        List<FriendRelation> list = lambdaQuery()
+                .eq(FriendRelation::getUserId,userId)
+                .or()
+                .eq(FriendRelation::getFriendId,userId)
+                .list();
+
+
+    }
 }

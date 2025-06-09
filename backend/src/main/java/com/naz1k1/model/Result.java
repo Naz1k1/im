@@ -1,4 +1,4 @@
-package com.naz1k1.model.response;
+package com.naz1k1.model;
 
 import lombok.Data;
 

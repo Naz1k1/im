@@ -79,8 +79,8 @@ const handleLogout = async () => {
 // 获取聊天列表
 const getChatList = async () => {
   try {
-    const response = await UserAPI.getChatList()
-    chatList.value = response.data
+    // const response = await UserAPI.getChatList()
+    // chatList.value = response.data
   } catch (error) {
     ElMessage.error('获取聊天列表失败')
   }

@@ -2,7 +2,7 @@ package com.naz1k1.controller;
 
 import com.naz1k1.model.request.user.FriendRequestDTO;
 import com.naz1k1.model.response.FriendVO;
-import com.naz1k1.model.response.Result;
+import com.naz1k1.model.Result;
 import com.naz1k1.model.response.UserSearchVO;
 import com.naz1k1.service.FriendRelationService;
 import org.springframework.web.bind.annotation.*;

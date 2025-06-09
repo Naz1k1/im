@@ -2,7 +2,7 @@ package com.naz1k1.controller;
 
 import com.naz1k1.model.request.auth.LoginDTO;
 import com.naz1k1.model.request.auth.RegisterDTO;
-import com.naz1k1.model.response.Result;
+import com.naz1k1.model.Result;
 import com.naz1k1.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

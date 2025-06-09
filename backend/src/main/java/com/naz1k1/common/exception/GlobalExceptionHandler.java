@@ -1,6 +1,6 @@
 package com.naz1k1.common.exception;
 
-import com.naz1k1.model.response.Result;
+import com.naz1k1.model.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;

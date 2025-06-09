@@ -1,6 +1,6 @@
 package com.naz1k1.controller;
 
-import com.naz1k1.model.response.Result;
+import com.naz1k1.model.Result;
 import com.naz1k1.service.GroupMemberService;
 import org.springframework.web.bind.annotation.*;
 

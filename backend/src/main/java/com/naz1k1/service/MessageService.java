@@ -2,7 +2,7 @@ package com.naz1k1.service;
 
 import com.naz1k1.entity.GroupMessage;
 import com.naz1k1.entity.PrivateMessage;
-import com.naz1k1.model.response.MessageReader;
+import com.naz1k1.model.message.MessageReader;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
