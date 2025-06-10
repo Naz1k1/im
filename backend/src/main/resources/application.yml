@@ -4,7 +4,7 @@ server:
 jwt:
   secret: "a3f8d7e0b2c491a6f5289e3b762c8d4f1e9a6b5c4d3e2f1a0b9c8d7e6f5a4b3"
   expiration: 86400000  # Token 过期时间（24小时）
-
+  tokenKeyPrefix: im:token
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

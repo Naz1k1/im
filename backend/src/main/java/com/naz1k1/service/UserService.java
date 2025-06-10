@@ -1,16 +1,7 @@
 package com.naz1k1.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.naz1k1.entity.User;
-import com.naz1k1.model.request.user.UpdatePasswordRequestDTO;
-import com.naz1k1.model.request.user.UpdateUserInfoRequestDTO;
-import com.naz1k1.model.response.UserInfoVO;
+import com.naz1k1.model.entity.User;
 
 public interface UserService extends IService<User> {
-
-    void updateUserInfo(UpdateUserInfoRequestDTO dto, Long userId);
-
-    void updatePassword(UpdatePasswordRequestDTO dto, Long userId);
-    UserInfoVO getUserInfo(Long userId);
-    void updateAvatar(String avatar, Long userId);
 }
