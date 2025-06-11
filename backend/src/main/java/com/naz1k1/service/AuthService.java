@@ -3,14 +3,17 @@ package com.naz1k1.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.naz1k1.dao.mapper.UserMapper;
 import com.naz1k1.exception.BusinessException;
-import com.naz1k1.model.dto.LoginDTO;
-import com.naz1k1.model.dto.RegisterDTO;
+import com.naz1k1.model.dto.auth.LoginDTO;
+import com.naz1k1.model.dto.auth.RegisterDTO;
 import com.naz1k1.model.entity.User;
 import com.naz1k1.utils.JwtProvider;
 import com.naz1k1.utils.PasswordEncoder;
+import com.naz1k1.utils.UserValidator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class AuthService {
     private final UserMapper userMapper;
@@ -34,7 +37,7 @@ public class AuthService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", dto.getUsername()).last("limit 1");
         User user = userMapper.selectOne(queryWrapper);
-        if (user == null || passwordEncoder.matches(
+        if (user == null || !passwordEncoder.matches(
                 dto.getPassword(),
                 user.getSalt(),
                 user.getPassword())) {
@@ -48,27 +51,29 @@ public class AuthService {
      * @param dto 注册DTO
      */
     public void register(RegisterDTO dto) {
-        boolean usernameExists = userMapper.exists(
-                new QueryWrapper<User>().eq("username", dto.getUsername())
-        );
+        boolean usernameExists = UserValidator.isUsernameExists(userMapper, dto.getUsername());
 
-        boolean emailExists = userMapper.exists(
-                new QueryWrapper<User>().eq("email", dto.getEmail())
-        );
+        boolean emailExists = UserValidator.isEmailExists(userMapper, dto.getEmail());
+
         if (usernameExists) {
             throw new BusinessException("用户名已存在");
         }
         if (emailExists) {
             throw new BusinessException("邮箱已被注册");
         }
+
+        String salt = passwordEncoder.generateSalt();
+        String encodedPassword = passwordEncoder.encode(dto.getPassword(), salt);
+
         User user = new User();
-        BeanUtils.copyProperties(dto, user);
+        BeanUtils.copyProperties(dto, user, "password");
+        user.setSalt(salt);
+        user.setPassword(encodedPassword);
+        user.setAvatar("/static/images/default-avatar.png");
         userMapper.insert(user);
     }
 
     public void logout(Long id) {
         return;
     }
-
-
 }

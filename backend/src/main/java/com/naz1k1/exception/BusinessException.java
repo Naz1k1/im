@@ -1,5 +1,6 @@
 package com.naz1k1.exception;
 
+import com.naz1k1.model.enums.RCode;
 import lombok.Getter;
 
 @Getter
@@ -11,8 +12,8 @@ public class BusinessException extends RuntimeException {
         this.code = 400;
     }
 
-    public BusinessException(int code, String message) {
-        super(message);
-        this.code = code;
+    public BusinessException(RCode rCode) {
+        super(rCode.getMessage());
+        this.code = rCode.getCode();
     }
 }

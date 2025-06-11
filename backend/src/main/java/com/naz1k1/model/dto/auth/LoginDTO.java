@@ -1,4 +1,4 @@
-package com.naz1k1.model.dto;
+package com.naz1k1.model.dto.auth;
 
 import lombok.Data;
 

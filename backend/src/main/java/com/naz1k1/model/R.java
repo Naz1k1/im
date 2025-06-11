@@ -25,8 +25,9 @@ public class R<T> implements Serializable {
         return restR(RCode.SUCCESS, null);
     }
 
-    public static <T> R<T> failure() {
-        return restR(RCode.FAILURE, null);
+    //失败
+    public static <T> R<T> failure(RCode r) {
+        return restR(r,null);
     }
 
     //封装返回值
