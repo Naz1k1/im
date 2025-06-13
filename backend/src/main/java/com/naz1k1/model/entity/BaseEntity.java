@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
     @TableId(type = IdType.AUTO)
     private Long id;
-    @TableField(value = "create_at", insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
-    private LocalDateTime createAt;
-    @TableField(value = "update_at", insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
-    private LocalDateTime updateAt;
+    @TableField(value = "created_at", insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
+    private LocalDateTime createdAt;
+    @TableField(value = "updated_at", insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
+    private LocalDateTime updatedAt;
 }
