@@ -19,13 +19,16 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final TokenService tokenService;
 
     public AuthService(UserMapper userMapper,
                        PasswordEncoder passwordEncoder,
-                       JwtProvider jwtProvider) {
+                       JwtProvider jwtProvider,
+                       TokenService tokenService) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
+        this.tokenService = tokenService;
     }
 
     /**
@@ -43,7 +46,11 @@ public class AuthService {
                 user.getPassword())) {
             throw new BusinessException("帐号或密码有误");
         }
-       return jwtProvider.generateToken(user.getId());
+        String token = jwtProvider.generateToken(user.getId());
+
+        long expirationTime = jwtProvider.verifyToken(token).getExpiresAt().getTime() - System.currentTimeMillis();
+        tokenService.storeToken(user.getId(), token, expirationTime);
+        return token;
     }
 
     /**
@@ -74,6 +81,6 @@ public class AuthService {
     }
 
     public void logout(Long id) {
-        return;
+        tokenService.invalidateToken(id);
     }
 }

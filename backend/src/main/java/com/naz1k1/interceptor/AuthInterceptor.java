@@ -2,6 +2,7 @@ package com.naz1k1.interceptor;
 
 import com.naz1k1.exception.UnauthorizedException;
 import com.naz1k1.model.enums.RCode;
+import com.naz1k1.service.TokenService;
 import com.naz1k1.utils.JwtProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,12 @@ public class AuthInterceptor implements HandlerInterceptor {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private final JwtProvider jwtProvider;
+    private final TokenService tokenService;
 
-    public AuthInterceptor(JwtProvider jwtProvider) {
+    public AuthInterceptor(JwtProvider jwtProvider,
+                           TokenService tokenService) {
         this.jwtProvider = jwtProvider;
+        this.tokenService = tokenService;
     }
 
     /**
@@ -31,31 +35,28 @@ public class AuthInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
-//        String token = extractToken(request);
-//        if (StringUtils.isBlank(token)) {
-//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//            throw new UnauthorizedException(RCode.UNAUTHORIZED.getMessage());
-//        }
-//        Long id = jwtProvider.getUserIdFromToken(token);
-//        if (id == null) {
-//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//            //todo
-//            throw new UnauthorizedException(RCode.UNAUTHORIZED.getMessage());
-//        }
-//        request.setAttribute("userId", id);
-//        return true;
+        // 放行 OPTIONS 请求
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         try {
             String token = extractToken(request);
             if (StringUtils.isBlank(token)) {
-                return false;
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                throw new UnauthorizedException(RCode.UNAUTHORIZED.getMessage());
             }
 
-            Long id = jwtProvider.getUserIdFromToken(token);
-            if (id == null) {
-                return false;
+            Long userId = jwtProvider.getUserIdFromToken(token);
+            if (userId == null) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                throw new UnauthorizedException(RCode.UNAUTHORIZED.getMessage());
             }
-
-            request.setAttribute("userId", id);
+            if (!tokenService.isTokenValid(userId, token)) {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                throw new UnauthorizedException(RCode.UNAUTHORIZED.getMessage());
+            }
+            request.setAttribute("userId", userId);
             return true;
 
         } catch (Exception e) {

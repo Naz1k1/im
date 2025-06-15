@@ -89,37 +89,90 @@ const handleMenuClick = (type) => {
 
 <style scoped>
 .chat-list {
-  width: 250px;
-  background-color: #fff;
-  border-right: 1px solid #e6e6e6;
+  width: 320px;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
 }
 
 .search-box {
-  padding: 10px;
-  border-bottom: 1px solid #e6e6e6;
+  width: 100%;
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
+  background: var(--color-bg-secondary);
 }
 
 .search-input {
-  flex: 1;
-  margin-right: 8px;
+  width: 100%;
+  margin-right: 0;
+  min-width: 0;
+}
+
+.search-input :deep(.el-input) {
+  background: transparent;
+  border-radius: 12px;
+  border: none;
+  box-shadow: none;
+  height: 40px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  background: var(--color-bg-main);
+  border-radius: 12px;
+  border: none;
+  box-shadow: none;
+  padding: 0 14px;
+  color: var(--color-text-main);
+  transition: none;
+  height: 40px;
+  min-height: 40px;
+}
+
+.search-input :deep(.el-input__inner) {
+  background: transparent;
+  color: var(--color-text-main);
+  font-size: 15px;
+  border: none;
+  box-shadow: none;
+  height: 40px;
+  line-height: 40px;
+  padding: 0;
+}
+
+.search-input :deep(.el-input__inner::placeholder) {
+  color: var(--color-text-placeholder);
+  opacity: 1;
+}
+
+.search-input :deep(.el-input__prefix) {
+  color: var(--color-text-placeholder);
 }
 
 .add-button {
+  margin-left: 6px;
   display: flex;
   align-items: center;
+  height: 40px;
 }
 
 .add-button .el-button {
-  padding: 8px;
-  height: 32px;
-  width: 32px;
+  padding: 0;
+  height: 40px;
+  width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--color-bg-main);
+  border-radius: 12px;
+  border: none;
+  color: var(--color-text-main);
+  transition: background 0.2s;
+  font-size: 22px;
+}
+.add-button .el-button:hover {
+  background: var(--color-bg-chat);
 }
 
 .dropdown-item {
@@ -130,7 +183,7 @@ const handleMenuClick = (type) => {
 }
 
 :deep(.el-dropdown-menu__item:hover) {
-  background-color: #07c160 !important;
+  background-color: var(--color-primary) !important;
   color: white !important;
 }
 

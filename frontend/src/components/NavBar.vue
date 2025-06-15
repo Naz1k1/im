@@ -26,7 +26,7 @@ const handleNavClick = (nav) => {
     <div class="nav-header">
       <el-avatar
           :size="40"
-          :src="userInfo.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+          :src= "'http://localhost:8080/static/image/avatar/defalut-avatar.svg'"
           @click="emit('logout')"
       />
     </div>
@@ -65,76 +65,109 @@ const handleNavClick = (nav) => {
 
 <style scoped>
 .nav-bar {
-  width: 60px;
-  background-color: #2f2f2f;
+  width: 72px;
+  background-color: var(--color-bg-main);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0;
-  height: 100%; /* 确保导航栏占满高度 */
+  padding: 0;
+  height: 100%;
 }
 
 .nav-header {
-  margin-bottom: 20px;
+  margin-top: 64px;
+  margin-bottom: 32px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.nav-header :deep(.el-avatar) {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 16px !important;
+  border: 2px solid #fff !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-sizing: border-box;
+  background: var(--color-bg-secondary);
+  transition: box-shadow 0.2s;
+}
+
+.nav-header :deep(.el-avatar):hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
 
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  flex: 1; /* 让导航菜单占据剩余空间 */
-  width: 100%; /* 确保宽度占满 */
+  align-items: center;
+  width: 100%;
+  flex: 1;
 }
 
 .nav-main {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: center;
-}
-
-.nav-bottom {
-  margin-top: auto; /* 将底部导航推到底部 */
-  display: flex;
-  justify-content: center;
-  padding-bottom: 20px; /* 底部间距 */
+  gap: 8px;
+  margin-top: 0;
+  width: 100%;
 }
 
 .nav-item {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #7c7c7c;
   cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.3s;
+  border-radius: 12px;
+  transition: all 0.2s;
+  margin-bottom: 2px;
 }
 
 .nav-item:hover {
-  background-color: #3e3e3e;
-  color: #fff;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-primary);
 }
 
 .nav-item.active {
-  background-color: #3e3e3e;
-  color: #fff;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-primary);
+  position: relative;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
+  background: var(--color-primary);
 }
 
 .nav-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   filter: invert(60%);
-  transition: all 0.3s;
+  transition: all 0.2s;
 }
 
-.nav-item:hover .nav-icon {
-  filter: invert(100%);
-}
-
+.nav-item:hover .nav-icon,
 .nav-item.active .nav-icon {
-  filter: invert(100%);
+  filter: invert(100%) sepia(1) saturate(5) hue-rotate(80deg);
+}
+
+.nav-bottom {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 24px;
+  width: 100%;
 }
 </style> 

@@ -1,0 +1,38 @@
+:root {
+  /* 主题色 */
+  --color-bg-main: #232323;
+  --color-bg-secondary: #2a2a2a;
+  --color-bg-chat: #181818;
+  --color-bg-input: #222;
+
+  /* 文字颜色 */
+  --color-text-main: #fff;
+  --color-text-secondary: #bfbfbf;
+  --color-text-placeholder: #888;
+
+  /* 高亮色 */
+  --color-primary: #07c160;
+  --color-danger: #ff4d4f;
+
+  /* 聊天气泡 */
+  --color-bubble-self: #07c160;
+  --color-bubble-other: #2a2a2a;
+
+  /* 边框/分割线 */
+  --color-border: #333;
+
+  /* 圆角 */
+  --radius-main: 8px;
+  --radius-bubble: 6px;
+
+  /* 阴影 */
+  --shadow-main: 0 2px 8px rgba(0,0,0,0.15);
+
+  /* 字体 */
+  --font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+
+  /* Element Plus 主题色覆盖 */
+  --el-color-primary: #07c160;
+  --el-color-success: #07c160;
+  --el-color-danger: #ff4d4f;
+} 

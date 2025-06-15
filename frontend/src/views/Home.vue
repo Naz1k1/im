@@ -7,6 +7,9 @@ import router from '../router'
 import NavBar from '../components/NavBar.vue'
 import ChatList from '../components/ChatList.vue'
 import ChatWindow from '../components/ChatWindow.vue'
+import ContactList from '../components/ContactList.vue'
+import FriendRequestDetail from '../components/FriendRequestDetail.vue'
+import FriendProfile from '../components/FriendProfile.vue'
 import { Search, Male, MoreFilled, Message, Phone, VideoCamera } from '@element-plus/icons-vue'
 
 const userInfo = ref({
@@ -14,6 +17,7 @@ const userInfo = ref({
   nickname: ''
 })
 
+const activeNav = ref('chat')
 const activeChat = ref(null)
 const chatList = ref([])
 const messages = ref([])
@@ -34,6 +38,9 @@ const groupForm = ref({
 const searchResult = ref(null)
 const addFriendRemark = ref('')
 const hasSearched = ref(false)
+
+const selectedFriendRequest = ref(null)
+const selectedFriend = ref(null)
 
 // 计算初始弹窗位置（屏幕中心）
 const initDialogPosition = () => {
@@ -164,6 +171,27 @@ const searchUser = async () => {
   }
 }
 
+// 监听导航栏切换
+const handleNavChange = (nav) => {
+  activeNav.value = nav
+}
+
+const handleSelectFriendRequest = (item) => {
+  selectedFriendRequest.value = item
+}
+
+const handleSelectFriend = (item) => {
+  selectedFriend.value = item
+  selectedFriendRequest.value = null // 切换时清空好友请求详情
+}
+
+const handleStartChat = (friend) => {
+  activeChat.value = friend
+  selectedFriend.value = null
+  selectedFriendRequest.value = null
+  // 可选：加载该好友的聊天记录
+}
+
 // 页面加载时获取用户信息和聊天列表
 getUserInfo()
 getChatList()
@@ -172,360 +200,126 @@ getChatList()
 <template>
   <div class="home-container">
     <!-- 左侧导航栏 -->
-    <NavBar 
-      :user-info="userInfo"
-      @logout="handleLogout"
-    />
+    <div class="sidebar">
+      <NavBar 
+        :user-info="userInfo"
+        @logout="handleLogout"
+        @nav-change="handleNavChange"
+      />
+    </div>
 
-    <!-- 中间聊天列表 -->
-    <ChatList
-      :chat-list="chatList"
-      :active-chat="activeChat"
-      @select-chat="selectChat"
-      @add-friend="showDialog('friend')"
-      @create-group="showDialog('group')"
-    />
+    <!-- 中间聊天列表或通讯录 -->
+    <div class="chatlist-panel">
+      <ChatList
+        v-if="activeNav === 'chat'"
+        :chat-list="chatList"
+        :active-chat="activeChat"
+        @select-chat="selectChat"
+        @add-friend="showDialog('friend')"
+        @create-group="showDialog('group')"
+      />
+      <ContactList
+        v-else-if="activeNav === 'contacts'"
+        @select-friend-request="handleSelectFriendRequest"
+        @select-friend="handleSelectFriend"
+      />
+    </div>
 
     <!-- 右侧聊天窗口 -->
-    <ChatWindow
-      :active-chat="activeChat"
-      :messages="messages"
-      :user-info="userInfo"
-      @send-message="sendMessage"
-    />
-
-    <!-- 添加好友弹窗 -->
-    <el-dialog
-      v-model="addFriendDialogVisible"
-      title="添加朋友"
-      width="380px"
-      height="200px"
-      :modal="false"
-      :close-on-click-modal="false"
-      draggable
-      :style="{
-        position: 'fixed',
-        left: dialogPosition.x + 'px',
-        top: dialogPosition.y + 'px',
-        margin: 0
-      }"
-    >
-      <div class="dialog-content">
-        <div class="search-box">
-          <el-input 
-            v-model="friendUsername" 
-            placeholder="微信号/手机号" 
-            class="search-input"
-            clearable
-          >
-            <template #append>
-              <el-button type="success" class="search-btn" @click="searchUser">搜索</el-button>
-            </template>
-          </el-input>
-        </div>
-
-        <!-- 搜索结果区域 -->
-        <template v-if="searchResult">
-          <div class="user-basic-info">
-            <el-avatar 
-              :size="45" 
-              :src="searchResult.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-              class="user-avatar"
-            />
-            <div class="user-info">
-              <div class="nickname">
-                {{ searchResult.nickname }}
-                <el-icon class="gender-icon"><Male /></el-icon>
-              </div>
-              <div class="wx-id">微信号：{{ searchResult.username }}</div>
-            </div>
-            <el-dropdown trigger="click" class="more-actions" v-if="searchResult.status !== 'NOT_FRIEND'">
-              <el-button text><el-icon><MoreFilled /></el-icon></el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>设置备注和标签</el-dropdown-item>
-                  <el-dropdown-item>设置朋友权限</el-dropdown-item>
-                  <el-dropdown-item>把他推荐给朋友</el-dropdown-item>
-                  <el-dropdown-item>设为星标朋友</el-dropdown-item>
-                  <el-dropdown-item>加入黑名单</el-dropdown-item>
-                  <el-dropdown-item class="danger">删除联系人</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-
-          <div class="user-detail">
-            <div class="detail-item">
-              <div class="label">备注</div>
-              <div class="value">
-                <el-input 
-                  v-model="addFriendRemark" 
-                  placeholder="添加备注名" 
-                  class="remark-input"
-                />
-              </div>
-            </div>
-            <div class="detail-item">
-              <div class="label">朋友圈</div>
-              <div class="value"></div>
-            </div>
-            <div class="detail-item">
-              <div class="label">个性签名</div>
-              <div class="value signature">{{ searchResult.signature || '暂无签名' }}</div>
-            </div>
-            <div class="detail-item">
-              <div class="label">来源</div>
-              <div class="value source">通过搜索微信号添加</div>
-            </div>
-          </div>
-
-          <!-- 添加好友按钮 -->
-          <div class="add-friend-action" v-if="searchResult.status === 'NOT_FRIEND'">
-            <el-button type="primary" @click="handleAddFriend" class="add-btn">添加到通讯录</el-button>
-          </div>
-        </template>
-
-        <!-- 无搜索结果提示 -->
-        <template v-else-if="hasSearched">
-          <div class="no-result">
-            <el-empty description="该用户不存在" />
-          </div>
-        </template>
-      </div>
-    </el-dialog>
-
-    <!-- 创建群聊弹窗 -->
-    <el-dialog
-      v-model="createGroupDialogVisible"
-      title="创建群聊"
-      width="400px"
-      :modal="false"
-      :close-on-click-modal="false"
-      draggable
-      :style="{
-        position: 'fixed',
-        left: dialogPosition.x + 'px',
-        top: dialogPosition.y + 'px',
-        margin: 0
-      }"
-    >
-      <div class="dialog-content">
-        <el-input v-model="groupForm.name" placeholder="群聊名称" />
-        <el-input
-          v-model="groupForm.description"
-          type="textarea"
-          :rows="3"
-          placeholder="群聊描述"
-          style="margin-top: 16px"
-        />
-        <div class="dialog-footer">
-          <el-button @click="createGroupDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleCreateGroup">创建</el-button>
-        </div>
-      </div>
-    </el-dialog>
+    <div class="chatwindow-panel">
+      <FriendRequestDetail
+        v-if="selectedFriendRequest"
+        :request="selectedFriendRequest"
+      />
+      <FriendProfile
+        v-else-if="selectedFriend"
+        :friend="selectedFriend"
+        @start-chat="handleStartChat"
+      />
+      <ChatWindow
+        v-else
+        :active-chat="activeChat"
+        :messages="messages"
+        :user-info="userInfo"
+        @send-message="sendMessage"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .home-container {
   height: 100vh;
+  width: 100vw;
   display: flex;
-  background-color: #f5f5f5;
+  background: var(--color-bg-main);
+  font-family: var(--font-family);
+  overflow: hidden;
 }
-
-.dialog-content {
-  padding: 20px 0;
-}
-
-.dialog-footer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-:deep(.el-dialog) {
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-:deep(.el-dialog__header) {
-  margin: 0;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e6e6e6;
-  cursor: move;
-}
-
-:deep(.el-dialog__headerbtn) {
-  top: 16px;
-}
-
-.search-box {
-  padding: 8px;
-  background-color: #f5f5f5;
-}
-
-.search-input {
-  :deep(.el-input__wrapper) {
-    background-color: #fff;
-    border-radius: 4px;
-    height: 32px;
-  }
-  
-  :deep(.el-input-group__append) {
-    padding: 0;
-  }
-}
-
-.search-btn {
-  border: none;
-  padding: 6px 12px;
-  border-radius: 0 4px 4px 0;
-  height: 32px;
-}
-
-.search-result {
-  padding: 0;
-}
-
-.user-basic-info {
-  padding: 12px;
-  display: flex;
-  align-items: flex-start;
-  border-bottom: 1px solid #eee;
-  position: relative;
-}
-
-.user-avatar {
-  margin-right: 10px;
-}
-
-.user-info {
-  flex: 1;
-}
-
-.nickname {
-  font-size: 15px;
-  font-weight: 400;
-  color: #000;
-  display: flex;
-  align-items: center;
-  margin-bottom: 2px;
-}
-
-.gender-icon {
-  color: #10aeff;
-  margin-left: 4px;
-}
-
-.wx-id {
-  font-size: 13px;
-  color: #888;
-}
-
-.more-actions {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-.user-detail {
-  padding: 0 15px;
-}
-
-.detail-item {
-  display: flex;
-  padding: 10px 12px;
-  border-bottom: 1px solid #eee;
-}
-
-.detail-item .label {
-  width: 70px;
-  color: #888;
-  font-size: 13px;
-}
-
-.detail-item .value {
-  flex: 1;
-  font-size: 13px;
-}
-
-.remark-input {
-  :deep(.el-input__wrapper) {
-    padding: 0;
-    box-shadow: none;
-  }
-}
-
-.signature, .source {
-  color: #353535;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: space-around;
-  padding: 15px;
-  border-top: 1px solid #eee;
-}
-
-.action-btn {
+.sidebar {
+  width: 72px;
+  background: var(--color-bg-main);
+  border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #353535;
-  font-size: 12px;
-  
-  .el-icon {
-    font-size: 24px;
-    margin-bottom: 5px;
-  }
+  z-index: 2;
+}
+.chatlist-panel {
+  width: 320px;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+.chatwindow-panel {
+  flex: 1;
+  background: var(--color-bg-chat);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-:deep(.el-dropdown-menu__item.danger) {
-  color: #ff4d4f;
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
 }
-
-:deep(.el-dialog) {
+::-webkit-scrollbar-thumb {
+  background: #222;
   border-radius: 4px;
-  overflow: hidden;
-  height: auto;
-  max-height: 500px;
 }
 
+/* 去除element弹窗圆角和阴影 */
+:deep(.el-dialog) {
+  border-radius: var(--radius-main);
+  box-shadow: none;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-main);
+}
 :deep(.el-dialog__header) {
   margin: 0;
-  padding: 10px 12px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #eee;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: move;
+  background: var(--color-bg-secondary);
+}
+:deep(.el-dialog__headerbtn) {
+  top: 16px;
 }
 
 :deep(.el-dialog__title) {
   font-size: 15px;
   font-weight: normal;
+  color: var(--color-text-main);
 }
-
 :deep(.el-dialog__body) {
   padding: 0;
+  background: var(--color-bg-secondary);
 }
-
 :deep(.el-dialog__headerbtn) {
   top: 12px;
   right: 12px;
-}
-
-.add-friend-action {
-  padding: 16px;
-  text-align: center;
-  border-top: 1px solid #eee;
-}
-
-.add-btn {
-  width: 200px;
-}
-
-.no-result {
-  padding: 40px 0;
-  text-align: center;
 }
 </style> 

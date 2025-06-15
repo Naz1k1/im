@@ -30,7 +30,7 @@ const handleSend = () => {
   <div class="chat-window">
     <template v-if="activeChat">
       <div class="chat-header">
-        <span class="chat-title">{{ activeChat.name }}</span>
+        <span class="chat-title">{{ activeChat?.nickname || activeChat?.name || activeChat?.username || '未命名' }}</span>
         <div class="chat-actions" v-if="activeChat.type === 'group'">
           <el-button type="text" @click="emit('view-group-info')">群聊信息</el-button>
         </div>
@@ -78,13 +78,15 @@ const handleSend = () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background: var(--color-bg-chat);
+  color: var(--color-text-main);
+  font-family: var(--font-family);
 }
 
 .chat-header {
   height: 60px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #e6e6e6;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -94,6 +96,7 @@ const handleSend = () => {
 .chat-title {
   font-size: 16px;
   font-weight: 500;
+  color: var(--color-text-main);
 }
 
 .message-list {
@@ -103,7 +106,7 @@ const handleSend = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: #f5f5f5;
+  background: var(--color-bg-chat);
 }
 
 .message-item {
@@ -121,27 +124,30 @@ const handleSend = () => {
 }
 
 .message-text {
-  background-color: #fff;
+  background: var(--color-bubble-other);
+  color: var(--color-text-main);
   padding: 10px 15px;
-  border-radius: 4px;
+  border-radius: var(--radius-bubble);
   word-break: break-word;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: none;
+  font-size: 15px;
 }
 
 .message-item.self .message-text {
-  background-color: #95ec69;
+  background: var(--color-bubble-self);
+  color: #fff;
 }
 
 .message-time {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-placeholder);
   margin-top: 4px;
   text-align: right;
 }
 
 .message-input {
-  background-color: #f5f5f5;
-  border-top: 1px solid #e6e6e6;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
   padding: 10px 20px;
   display: flex;
   flex-direction: column;
@@ -156,20 +162,34 @@ const handleSend = () => {
 
 .toolbar i {
   font-size: 20px;
-  color: #666;
+  color: var(--color-text-placeholder);
   cursor: pointer;
+  transition: color 0.2s;
 }
 
 .toolbar i:hover {
-  color: #333;
+  color: var(--color-text-main);
 }
 
-.message-input .el-textarea {
-  background-color: #fff;
+.message-input :deep(.el-textarea) {
+  background: var(--color-bg-input);
+  border-radius: var(--radius-main);
+  color: var(--color-text-main);
+}
+
+.message-input :deep(.el-textarea__inner) {
+  background: var(--color-bg-input);
+  color: var(--color-text-main);
+  border-radius: var(--radius-main);
+  border: none;
 }
 
 .message-input .el-button {
   align-self: flex-end;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-main);
+  border: none;
 }
 
 .no-chat-selected {
@@ -177,6 +197,7 @@ const handleSend = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f5f5;
+  background: var(--color-bg-chat);
+  color: var(--color-text-secondary);
 }
 </style> 

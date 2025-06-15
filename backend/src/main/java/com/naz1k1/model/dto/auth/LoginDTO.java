@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class LoginDTO {
     @NotBlank(message = "帐号不能为空")
-    private String Username;
+    private String username;
     @NotBlank(message = "密码不能为空")
-    private String Password;
+    private String password;
 }
