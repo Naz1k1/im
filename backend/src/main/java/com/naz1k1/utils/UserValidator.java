@@ -6,7 +6,6 @@ import com.naz1k1.model.entity.User;
 
 public class UserValidator {
 
-    // 或者保持单独验证但优化方法名
     public static boolean isEmailExists(UserMapper userMapper, String email) {
         return userMapper.selectCount(new QueryWrapper<User>().eq("email", email)) > 0;
     }

@@ -7,13 +7,15 @@ import {ElMessage} from "element-plus";
 const form = ref({
   username: '',
   password: '',
-  nickname: ''
+  nickname: '',
+  email:''
 })
 
 const rules = {
   username: [{ required: true, message: '请输入帐号', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-  nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }]
+  nickname: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+  email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
 }
 
 const loading = ref(false)
@@ -63,6 +65,12 @@ const goToLogin = () => {
           <el-input
               v-model="form.nickname"
               placeholder="请输入昵称"
+          />
+        </el-form-item>
+        <el-form-item prop="email">
+          <el-input
+              v-model="form.email"
+              placeholder="请输入邮箱"
           />
         </el-form-item>
         <el-button

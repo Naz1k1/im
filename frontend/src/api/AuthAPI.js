@@ -21,7 +21,6 @@ export const authAPI = {
      * 注销方法
      */
     logout() {
-        localStorage.clear();
         return api.post('auth/logout')
     },
 

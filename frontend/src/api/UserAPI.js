@@ -9,19 +9,38 @@ export const UserAPI = {
     },
 
     /**
-     * 更新用户信息
+     * 上传头像
      */
-    updateUserInfo(data) {
-        return api.put('user/info',data)
+    uploadAvatar(file) {
+        const formData = new FormData()
+        formData.append('file', file)
+        return api.post('user/avatar/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
     },
 
     /**
-     * 更新用户密码
-     * @param data
+     * 修改密码
      */
-    updatePassword(data){
-        return api.put("user/password",data)
+    changePassword(data) {
+        return api.post('user/password', data)
+    },
+
+    /**
+     * 更新用户信息
+     */
+    updateUserInfo(data) {
+        return api.post('user/info', data)
+    },
+
+    /**
+     * 搜索用户
+     */
+    searchUser(keyword) {
+        return api.get('user/search', {
+            params: { keyword }
+        })
     }
-
-
 }

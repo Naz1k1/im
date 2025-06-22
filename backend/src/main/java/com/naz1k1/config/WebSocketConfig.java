@@ -13,9 +13,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // 启用简单的基于内存的消息代理
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic", "/queue", "/user");
         // 设置应用程序前缀，客户端发送消息需要带上这个前缀
         config.setApplicationDestinationPrefixes("/app");
+        // 设置用户目标前缀，用于点对点消息
+        config.setUserDestinationPrefix("/user");
     }
 
     @Override
@@ -24,8 +26,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*") // 允许跨域
                 .withSockJS(); // 启用SockJS支持
+        
+        // 注册纯WebSocket端点（不使用SockJS）
+        registry.addEndpoint("/ws-native")
+                .setAllowedOriginPatterns("*");
     }
-
-
-
 }
